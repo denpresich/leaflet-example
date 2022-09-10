@@ -48,10 +48,12 @@ const places = [
 
 const map = L.map("map").setView([47.9653981, 33.4440451], 11);
 
+// Set max boundaries
 map.setMaxBounds(
   L.latLngBounds(L.latLng(48.299888, 32.718564), L.latLng(47.503002, 34.126729))
 );
 
+// Display the map
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   minZoom: 10.5,
@@ -61,6 +63,7 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 places.map(({ name, imageUrl, coordinates: { lat, lng } }) => {
   L.marker([lat, lng])
     .addTo(map)
+    // Handle click event
     .on("click", () => {
       L.popup()
         // Make + 0.02 to display popup above the marker
