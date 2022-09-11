@@ -60,20 +60,65 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "© OpenStreetMap",
 }).addTo(map);
 
+// Close modal function
+const closeModal = () => {
+  // Get modal element by id
+  const modal = document.getElementById("exampleModal");
+
+  // Hide backdrop
+  document.getElementById("exampleModalBackdrop").remove();
+
+  // Close the modal for the user
+  modal.classList.remove("show");
+  modal.style.display = "none";
+  modal.removeAttribute("aria-modal");
+  modal.removeAttribute("role", "dialog");
+  modal.setAttribute("aria-hidden", "true");
+};
+
+// Show modal
+const showModal = (content) => {
+  // Get modal element by id
+  const modal = document.getElementById("exampleModal");
+
+  // Get modal content element and set HTML content
+  const modalContent = document.getElementById("exampleModalContent");
+  modalContent.innerHTML = content;
+
+  // Show modal backdrop
+  const backdrop = document.createElement("div", {});
+  backdrop.className = "modal-backdrop fade show";
+  backdrop.id = "exampleModalBackdrop";
+
+  document.body.appendChild(backdrop);
+
+  // Show modal for the user
+  modal.classList.add("show");
+  modal.style.display = "block";
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("role", "dialog");
+  modal.removeAttribute("aria-hidden");
+};
+
 places.map(({ name, imageUrl, coordinates: { lat, lng } }) => {
   L.marker([lat, lng])
     .addTo(map)
     // Handle click event
     .on("click", () => {
-      L.popup()
-        // Make + 0.02 to display popup above the marker
-        .setLatLng([lat + 0.02, lng])
-        .setContent(
-          "<div>" +
-            `<h3>${name}</h3>` +
-            `<img class="place-image" src="${imageUrl}" alt="${name}" />` +
-            "</div>"
-        )
-        .openOn(map);
+      const modalHeader = `
+        <div class="modal-header">
+          <h5 class="modal-title">${name}</h5>
+          <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close">
+          </button>
+        </div>
+      `;
+
+      const modalBody = `
+        <div class="modal-body">
+          <img class="place-image" alt="${name}" src="${imageUrl}" />
+        </div>
+      `;
+
+      showModal(modalHeader + modalBody);
     });
 });
